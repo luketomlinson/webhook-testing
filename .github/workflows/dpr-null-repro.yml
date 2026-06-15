@@ -1,0 +1,28 @@
+name: Deployment protection webhook null deployment repro
+
+on:
+  workflow_dispatch:
+    inputs:
+      hold_seconds:
+        description: Seconds to hold the concurrency group after the environment gate opens
+        required: false
+        default: "180"
+
+concurrency:
+  group: dpr-null-repro
+  cancel-in-progress: false
+
+jobs:
+  deploy:
+    name: deploy behind concurrency and environment
+    runs-on: ubuntu-latest
+    environment:
+      name: dpr-null-repro
+    steps:
+      - name: Show run context
+        run: |
+          echo "run_id=${{ github.run_id }}"
+          echo "run_attempt=${{ github.run_attempt }}"
+          echo "environment=dpr-null-repro"
+      - name: Hold concurrency group
+        run: sleep "${{ inputs.hold_seconds }}"
