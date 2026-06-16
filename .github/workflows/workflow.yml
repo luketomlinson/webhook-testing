@@ -1,0 +1,11 @@
+name: Customer minimal reusable workflow
+
+on:
+  workflow_call:
+
+jobs:
+  repro:
+    runs-on: ubuntu-latest
+    environment: some-environment
+    steps:
+      - run: sleep 10
