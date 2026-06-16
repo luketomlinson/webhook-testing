@@ -4,18 +4,19 @@ on:
   workflow_dispatch:
     inputs:
       hold_seconds:
-        description: Seconds to hold the concurrency group after the environment gate opens
+        description: Seconds each matrix job holds after the environment gate opens
         required: false
         default: "180"
 
-concurrency:
-  group: dpr-null-repro
-  cancel-in-progress: false
-
 jobs:
   deploy:
-    name: deploy behind concurrency and environment
+    name: deploy shard ${{ matrix.shard }}
     runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      max-parallel: 20
+      matrix:
+        shard: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20]
     environment:
       name: dpr-null-repro
     steps:
@@ -24,5 +25,6 @@ jobs:
           echo "run_id=${{ github.run_id }}"
           echo "run_attempt=${{ github.run_attempt }}"
           echo "environment=dpr-null-repro"
-      - name: Hold concurrency group
+          echo "shard=${{ matrix.shard }}"
+      - name: Hold after approval
         run: sleep "${{ inputs.hold_seconds }}"
