@@ -1,0 +1,9 @@
+name: Customer minimal DPR repro
+
+on:
+  workflow_dispatch:
+
+jobs:
+  repro:
+    concurrency: repro
+    uses: ./.github/workflows/workflow.yml
